@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mpumi — Growth Farm Ops</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{--brown:#5D4037;--pink:#D4A5A5;--cream:#FAF8F5;--white:#FFF;--success:#4A7C59;--danger:#8B4049;--warning:#C9A227;--info:#5C7A99}
+    body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);margin:0;padding-bottom:80px}
+    .header{background:var(--brown);padding:15px;color:var(--cream);font-family:'Playfair Display';border-bottom:3px solid var(--pink);display:flex;justify-content:space-between}
+    .screen{display:none;padding:16px}.screen.active{display:block}
+    .card{background:var(--white);border-radius:12px;padding:15px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+    .proj-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}
+    .proj-table th, .proj-table td{text-align:left;padding:8px;border-bottom:1px solid #eee}
+    .nav{position:fixed;bottom:0;width:100%;background:var(--white);display:flex;border-top:1px solid #ddd;z-index:100}
+    .nav-item{flex:1;padding:15px;text-align:center;font-size:9px;font-weight:700;cursor:pointer;color:var(--brown)}
+    .nav-item.active{background:var(--cream);border-top:3px solid var(--pink)}
+  </style>
+</head>
+<body>
+
+<header class="header"><span>MPUMI</span><span style="font-size:10px">v5.4 • STRATEGY ON</span></header>
+
+<div class="screen active" id="projects">
+  <div class="card">
+    <h3 style="font-family:'Playfair Display'">Project Delivery & Margins</h3>
+    <div style="margin-top:10px">
+      <div style="font-weight:700; color:var(--pink)">Gates Foundation: R&D Strategy</div>
+      <table class="proj-table">
+        <thead><tr><th>Resource</th><th>Planned</th><th>Actual</th><th>Margin</th></tr></thead>
+        <tbody>
+          <tr><td>Lindiwe</td><td>160h</td><td>142h</td><td style="color:var(--success)">18%</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10px; margin-top:10px; border-top:1px solid #eee; padding-top:10px">
+        <strong>Last Reviewed:</strong> 20 Jan | <strong>CEO Review:</strong> 03 Feb <br>
+        <a href="https://drive.google.com/drive/folders/gf-gates-rd" target="_blank" style="color:var(--info)">📎 G-Drive: Project Artefacts</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="analysis">
+  <div class="card">
+    <h3 style="font-family:'Playfair Display'">Operational Trends</h3>
+    <div style="margin-top:10px">
+      <p style="font-size:12px"><strong>Trend:</strong> Margin Erosion in Studio</p>
+      <div style="font-size:11px; color:var(--danger)">Resolution: Move low-margin clients to "Advisory" retainers to protect C-Suite capacity.</div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-item active" onclick="nav('projects')">DELIVERY</div>
+  <div class="nav-item" onclick="nav('analysis')">ANALYSIS</div>
+</nav>
+
+<script>
+  function nav(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>
