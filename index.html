@@ -4,93 +4,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mpumi — Growth Farm Master</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--brown:#5D4037;--pink:#D4A5A5;--cream:#FAF8F5;--white:#FFF;--success:#4A7C59;--warning:#C9A227;--danger:#8B4049;--info:#5C7A99}
+    :root{--brown-dark:#3E2723;--brown:#5D4037;--brown-light:#8D6E63;--pink:#D4A5A5;--cream:#FAF8F5;--white:#FFF;--success:#4A7C59;--warning:#C9A227;--danger:#8B4049;--info:#5C7A99}
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);padding-bottom:60px;line-height:1.2}
-    .header{background:var(--brown);padding:8px 16px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--pink);display:flex;justify-content:space-between;align-items:center}
-    .logo{font-family:'Playfair Display',serif;font-weight:600;color:var(--cream);font-size:13px}
-    .screen{display:none;padding:8px}.screen.active{display:block}
-    .card{background:var(--white);border-radius:8px;padding:10px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-    .card-title{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;margin-bottom:6px;border-bottom:1px solid #f0f0f0;padding-bottom:4px}
-    /* Compact Metrics */
-    .fin-bar{height:10px;background:#eee;border-radius:5px;margin:4px 0;overflow:hidden}.fin-fill{height:100%;background:var(--success)}
-    /* Delivery Styles */
-    .delivery-item{border-bottom:1px solid #f0f0f0;padding:6px 0;margin-bottom:6px}
-    .delivery-item:last-child{border-bottom:none}
-    table{width:100%;font-size:10px;margin:4px 0}
-    th{text-align:left;color:var(--brown-light);font-weight:400}
-    .dep-badge{font-size:9px;background:rgba(201,162,39,0.1);color:var(--warning);padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px}
-    /* Form Styles */
-    input, select, textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #ddd;border-radius:6px;font-size:11px}
-    .btn-commit{background:var(--brown);color:white;padding:10px;border:none;border-radius:6px;width:100%;font-weight:700;margin-top:8px;cursor:pointer}
-    .nav{position:fixed;bottom:0;width:100%;background:var(--white);display:flex;border-top:1px solid #eee;z-index:100}
-    .nav-item{flex:1;padding:10px;text-align:center;font-size:9px;font-weight:700;color:var(--brown-light);cursor:pointer}
+    body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;padding-bottom:70px}
+    .header{background:var(--brown);padding:14px 16px;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--pink)}
+    .header-row{display:flex;justify-content:space-between;align-items:center}.logo{font-family:'Playfair Display',serif;font-weight:600;color:var(--cream);font-size:16px}
+    .screen{display:none}.screen.active{display:block}.content{padding:16px}
+    /* Restored v5 Card Styling */
+    .card{background:var(--white);border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(62,39,35,.06)}
+    .card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--brown);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+    /* Restored v5 Health Score */
+    .health-score{text-align:center;padding:20px;background:var(--white);border-radius:12px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+    .health-ring{position:relative;width:140px;height:140px;margin:0 auto 16px}.health-ring svg{transform:rotate(-90deg)}
+    .health-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .health-percent{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--brown)}
+    .health-grid{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.health-item{text-align:center;min-width:50px;font-size:10px;font-weight:700}
+    /* Pipelines & Bars */
+    .pipeline-stages{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.pipeline-stage{flex:0 0 auto;min-width:80px;background:var(--cream);border-radius:8px;padding:10px 8px;text-align:center}
+    .fin-bar{height:20px;background:rgba(141,110,99,.12);border-radius:6px;position:relative;margin:8px 0;overflow:hidden}.fin-fill{height:100%;background:var(--success);width:75%}
+    /* Nav */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);display:flex;border-top:1px solid rgba(141,110,99,.15);z-index:100}
+    .nav-item{flex:1;padding:10px 4px 8px;text-align:center;font-size:9px;font-weight:600;color:var(--brown-light);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
     .nav-item.active{color:var(--brown);border-top:3px solid var(--pink)}
+    .nav-item svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none}
+    /* Analysis & Forms */
+    .dep-box{background:rgba(201,162,39,0.1); border-left:4px solid var(--warning); padding:10px; margin-top:10px; font-size:11px; border-radius:4px}
+    input, select, textarea{width:100%; padding:12px; margin:8px 0; border:1px solid #eee; border-radius:8px; background:var(--cream)}
+    .btn-save{background:var(--brown); color:var(--cream); padding:14px; border:none; border-radius:8px; width:100%; font-weight:700; cursor:pointer}
   </style>
 </head>
 <body>
 
-<header class="header"><div class="logo">MPUMI • GROWTH FARM</div><div style="font-size:9px;color:var(--pink);font-weight:700">V6.1 LIVE</div></header>
+<header class="header"><div class="header-row"><div class="logo">GROWTH FARM • MPUMI</div><div style="background:var(--pink); padding:4px 10px; border-radius:12px; font-size:10px; font-weight:700">Jan 2026</div></div></header>
 
 <div class="screen active" id="scr-dash">
-  <div class="card">
-    <div class="card-title">Finance Cascade (Target R24M)</div>
-    <div style="font-size:10px;display:flex;justify-content:space-between"><span>Revenue: R1.8M / R2M</span><span style="font-weight:700">90%</span></div>
-    <div class="fin-bar"><div class="fin-fill" style="width:90%"></div></div>
-    <div style="font-size:9px;color:var(--brown-light);margin-top:4px">Calculated monthly pacing</div>
-  </div>
-  
-  <div class="card">
-    <div class="card-title">Top Dependencies</div>
-    <div id="dash-dep-list">
-      <div class="dep-badge">NALEDI: Needs vendor payment for Briansfomo</div>
+  <div class="content">
+    <div class="health-score">
+      <div class="health-ring"><svg viewBox="0 0 140 140" width="140" height="140"><circle cx="70" cy="70" r="58" fill="none" stroke="rgba(141,110,99,.15)" stroke-width="12"/><circle cx="70" cy="70" r="58" fill="none" stroke="var(--warning)" stroke-width="12" stroke-dasharray="364.4" stroke-dashoffset="109"/></svg><div class="health-center"><div class="health-percent">70%</div><div style="font-size:10px">Company Health</div></div></div>
+      <div class="health-grid">
+        <div class="health-item"><div style="color:var(--success)">82%</div>BD</div><div class="health-item"><div style="color:var(--warning)">65%</div>VENT</div><div class="health-item"><div style="color:var(--success)">75%</div>CLNT</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Business Dev Pipeline <span style="font-size:10px; background:var(--brown); color:white; padding:2px 8px; border-radius:10px">R2.1M weighted</span></div>
+      <div class="pipeline-stages">
+        <div class="pipeline-stage"><div style="font-size:8px; color:var(--brown-light)">LEAD</div><div style="font-weight:700">2</div><div style="font-size:9px">R100K</div></div>
+        <div class="pipeline-stage"><div style="font-size:8px; color:var(--brown-light)">DISCO</div><div style="font-weight:700">1</div><div style="font-size:9px">R160K</div></div>
+        <div class="pipeline-stage"><div style="font-size:8px; color:var(--brown-light)">PROP</div><div style="font-weight:700">2</div><div style="font-size:9px">R882K</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Finance: R24M Cascade</div>
+      <div style="font-size:11px; display:flex; justify-content:space-between"><span>Monthly Revenue</span><span>R1.8M / R2M</span></div>
+      <div class="fin-bar"><div class="fin-fill" style="width:90%"></div></div>
     </div>
   </div>
 </div>
 
 <div class="screen" id="scr-delivery">
-  <div class="card">
-    <div class="card-title">Ongoing Project Delivery</div>
-    <div id="project-container">
-      <div class="delivery-item">
-        <strong style="color:var(--pink);font-size:11px">Gates Foundation: R&D Strategy</strong>
-        <table><tr><th>Resource</th><th>Hours</th><th>Margin</th></tr><tr><td>Lindiwe</td><td>142/160</td><td style="color:var(--success)">18%</td></tr></table>
+  <div class="content">
+    <div class="card">
+      <div class="card-title">Ongoing Project Delivery</div>
+      <div id="project-container">
+        <strong style="color:var(--pink); font-size:12px">Gates Foundation: R&D Strategy</strong>
+        <p style="font-size:11px; margin-top:5px">Resource: Lindiwe | Margin: <span style="color:var(--success); font-weight:700">18%</span></p>
+        <div class="dep-box"><strong>Accountability:</strong> Naledi must clear G-Drive folder.</div>
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">New Entry</div>
-    <input type="text" id="cName" placeholder="Client Name">
-    <input type="text" id="rName" placeholder="Resource Name">
-    <div style="display:flex;gap:4px">
-        <input type="number" id="cRate" placeholder="Client Rate">
-        <input type="number" id="pRate" placeholder="Our Cost">
+    
+    <div class="card">
+      <div class="card-title">Add New Delivery Entry</div>
+      <input type="text" id="cName" placeholder="Client Name">
+      <input type="text" id="rName" placeholder="Resource Name">
+      <div style="display:flex; gap:8px"><input type="number" id="cRate" placeholder="Client Rate"><input type="number" id="pRate" placeholder="Our Cost"></div>
+      <textarea id="dNote" placeholder="Dependency Note (Accountability description)"></textarea>
+      <button class="btn-save" onclick="addProject()">Commit to Pipeline</button>
     </div>
-    <select id="depOn"><option value="">Dependency (Who?)</option><option value="Zweli">Zweli</option><option value="Thabo">Thabo</option><option value="Lindiwe">Lindiwe</option><option value="Naledi">Naledi</option></select>
-    <textarea id="dNote" placeholder="2-line accountability description..." rows="2"></textarea>
-    <button class="btn-commit" onclick="commitProject()">Commit to Pipeline</button>
   </div>
 </div>
 
 <div class="screen" id="scr-analysis">
-  <div class="card">
-    <div class="card-title">Strategic Insights</div>
-    <div style="font-size:11px">
-        <strong>Trend: CEO Blocker</strong>
-        <p style="color:var(--brown-light);margin-bottom:8px">70% of dependencies wait on Zweli.</p>
+  <div class="content">
+    <div class="card">
+      <div class="card-title">Strategic Insights</div>
+      <div style="border-left:4px solid var(--danger); padding-left:12px; margin-bottom:15px">
         <strong>Trend: Billable Leakage</strong>
-        <p style="color:var(--brown-light)">Actuals exceeding planned hours by 12%.</p>
+        <p style="font-size:11px; color:var(--brown-light)">Actual hours are 12% over planned.</p>
+      </div>
     </div>
   </div>
 </div>
 
-<nav class="nav">
-  <div class="nav-item active" onclick="nav('dash')">DASH</div>
-  <div class="nav-item" onclick="nav('delivery')">DELIVERY</div>
-  <div class="nav-item" onclick="nav('analysis')">ANALYSIS</div>
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="nav('dash')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Dashboard</button>
+  <button class="nav-item" onclick="nav('delivery')"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Delivery</button>
+  <button class="nav-item" onclick="nav('analysis')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Analysis</button>
 </nav>
 
 <script>
@@ -100,33 +112,19 @@ function nav(id){
   document.getElementById('scr-'+id).classList.add('active');
   event.currentTarget.classList.add('active');
 }
-
-function commitProject(){
+function addProject(){
   const client = document.getElementById('cName').value;
   const res = document.getElementById('rName').value;
-  const cRate = document.getElementById('cRate').value;
-  const pRate = document.getElementById('pRate').value;
-  const dep = document.getElementById('depOn').value;
   const note = document.getElementById('dNote').value;
-  
   if(!client || !res) return alert("Please fill in Client and Resource");
-
-  const margin = Math.round(((cRate - pRate) / cRate) * 100);
-  const color = margin < 15 ? 'var(--danger)' : 'var(--success)';
-
-  const html = `
-    <div class="delivery-item">
-      <strong style="color:var(--pink);font-size:11px">${client}</strong>
-      <table><tr><th>Resource</th><th>Margin</th></tr><tr><td>${res}</td><td style="color:${color}">${margin}%</td></tr></table>
-      ${dep ? `<div class="dep-badge">${dep.toUpperCase()}: ${note}</div>` : ''}
-    </div>`;
   
+  const html = `<div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px">
+    <strong style="color:var(--pink); font-size:12px">${client}</strong>
+    <p style="font-size:11px">Resource: ${res}</p>
+    <div class="dep-box"><strong>Dependency:</strong> ${note}</div>
+  </div>`;
   document.getElementById('project-container').innerHTML += html;
-  
-  // Clear form
-  document.getElementById('cName').value = '';
-  document.getElementById('rName').value = '';
-  alert("Data Committed! Switching to Delivery view.");
+  alert("Committed to Mpumi!");
   nav('delivery');
 }
 </script>
