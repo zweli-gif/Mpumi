@@ -1,63 +1,347 @@
-<style>
-  /* LOGO VIBE: McKinsey Rigor meets Human Spirit */
-  .logo-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 0.8; /* Pulls the words closer vertically */
-    padding: 5px 0;
-  }
-
-  .logo-growth {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-weight: 700;
-    font-size: 28px; /* Compact size for mobile */
-    letter-spacing: -1px;
-    color: var(--cream);
-    text-transform: none;
-  }
-
-  .logo-farm {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-weight: 700;
-    font-size: 28px;
-    /* This specific spacing aligns 'FARM' exactly under 'Growth' */
-    letter-spacing: 5.8px; 
-    color: var(--cream);
-    position: relative;
-    text-transform: uppercase;
-  }
-
-  .balloon {
-    position: absolute;
-    left: 4px; /* Tied to the 'F' */
-    top: -8px; /* Contained: does not pass the top of 'Growth' */
-    width: 12px;
-    height: 16px;
-    background: var(--pink);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    transform: rotate(-8deg);
-  }
-
-  .balloon-string {
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    width: 1px;
-    height: 10px;
-    background: var(--cream);
-  }
-</style>
-
-<header class="header">
-  <div class="header-row">
-    <div class="logo-stack">
-      <div class="logo-growth">Growth</div>
-      <div class="logo-farm">
-        Farm
-        <div class="balloon"><div class="balloon-string"></div></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Growth Farm — Operating Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--brown-dark:#3E2723;--brown:#5D4037;--brown-light:#8D6E63;--pink:#D4A5A5;--cream:#FAF8F5;--white:#FFF;--success:#4A7C59;--warning:#C9A227;--danger:#8B4049;--info:#5C7A99}
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;padding-bottom:70px}
+    .header{background:var(--brown);padding:14px 16px;position:sticky;top:0;z-index:100}.header-row{display:flex;justify-content:space-between;align-items:center}.logo{font-family:'Playfair Display',serif;font-weight:600;color:var(--cream);font-size:16px}.month-badge{background:var(--pink);color:var(--brown-dark);padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);display:flex;border-top:1px solid rgba(141,110,99,.15);z-index:100}.nav-item{flex:1;padding:10px 4px 8px;text-align:center;font-size:9px;font-weight:600;color:var(--brown-light);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}.nav-item.active{color:var(--brown)}.nav-item svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none}
+    .screen{display:none}.screen.active{display:block}.content{padding:16px}
+    .card{background:var(--white);border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(62,39,35,.06)}.card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--brown);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}.card-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;background:var(--brown);color:var(--cream)}
+    .health-score{text-align:center;padding:20px;background:var(--white);border-radius:12px;margin-bottom:16px}.health-ring{position:relative;width:140px;height:140px;margin:0 auto 16px}.health-ring svg{transform:rotate(-90deg)}.health-ring-bg{fill:none;stroke:rgba(141,110,99,.15);stroke-width:12}.health-ring-fill{fill:none;stroke-width:12;stroke-linecap:round}.health-ring-fill.yellow{stroke:var(--warning)}.health-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.health-percent{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--brown)}.health-label{font-size:11px;color:var(--brown-light)}.health-breakdown{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.health-item{text-align:center;min-width:50px}.health-item-score{font-size:14px;font-weight:700}.health-item-score.green{color:var(--success)}.health-item-score.yellow{color:var(--warning)}.health-item-score.red{color:var(--danger)}.health-item-label{font-size:9px;color:var(--brown-light);text-transform:uppercase}
+    .pipeline-stages{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:8px}.pipeline-stage{flex:0 0 auto;min-width:80px;background:var(--cream);border-radius:8px;padding:10px 8px;text-align:center}.stage-name{font-size:9px;font-weight:600;color:var(--brown-light);text-transform:uppercase;margin-bottom:4px}.stage-count{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--brown)}.stage-value{font-size:10px;color:var(--brown-light)}
+    .ventures-row{display:flex;gap:8px;overflow-x:auto}.venture-chip{flex:0 0 auto;background:var(--cream);border-radius:8px;padding:10px 12px;border-left:3px solid var(--pink)}.venture-name{font-size:12px;font-weight:600;color:var(--brown);margin-bottom:2px}.venture-stage{font-size:10px;color:var(--brown-light)}.venture-days{font-size:10px;font-weight:600;color:var(--warning)}
+    .client-health-row{display:flex;gap:8px}.client-bucket{flex:1;background:var(--cream);border-radius:8px;padding:10px;text-align:center}.bucket-dot{width:10px;height:10px;border-radius:50%;margin:0 auto 6px}.bucket-dot.firm{background:var(--success)}.bucket-dot.attention{background:var(--warning)}.bucket-dot.at-risk{background:var(--danger)}.bucket-dot.dormant{background:var(--brown-light)}.bucket-count{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--brown)}.bucket-label{font-size:9px;color:var(--brown-light);text-transform:uppercase}
+    .finance-metric{margin-bottom:14px}.finance-header{display:flex;justify-content:space-between;margin-bottom:6px}.finance-name{font-size:12px;font-weight:600;color:var(--brown)}.finance-values{font-size:11px;color:var(--brown-light)}.finance-bar{height:24px;background:rgba(141,110,99,.12);border-radius:6px;position:relative}.finance-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:600;color:var(--white)}.finance-fill.green{background:var(--success)}.finance-fill.yellow{background:var(--warning)}.finance-target-line{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--brown-dark);border-radius:2px}.finance-target-label{position:absolute;top:-16px;font-size:8px;color:var(--brown);transform:translateX(-50%)}
+    .admin-alert{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(141,110,99,.1)}.admin-alert:last-child{border-bottom:none}.alert-icon{font-size:14px}.alert-text{flex:1;font-size:12px;color:var(--brown)}.alert-status{font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px}.alert-status.overdue{background:rgba(139,64,73,.15);color:var(--danger)}.alert-status.due-soon{background:rgba(201,162,39,.15);color:var(--warning)}
+    .sub-tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 16px;background:var(--white);border-bottom:1px solid rgba(141,110,99,.1);position:sticky;top:52px;z-index:50}.sub-tab{padding:8px 14px;border-radius:20px;font-size:11px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;background:var(--cream);color:var(--brown-light)}.sub-tab.active{background:var(--brown);color:var(--cream)}
+    .kanban-board{display:flex;gap:10px;overflow-x:auto;padding:16px}.kanban-column{min-width:220px;max-width:220px;background:rgba(141,110,99,.06);border-radius:10px;padding:10px}.column-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 4px}.column-title{font-size:10px;font-weight:700;color:var(--brown);text-transform:uppercase}.column-count{font-size:10px;font-weight:600;color:var(--brown-light)}.kanban-card{background:var(--white);border-radius:8px;padding:10px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 3px rgba(62,39,35,.08);border-left:3px solid var(--brown)}.kanban-card.venture{border-left-color:var(--pink)}.kanban-card.studio{border-left-color:var(--success)}.kanban-card.client{border-left-color:var(--info)}.kcard-title{font-size:12px;font-weight:600;color:var(--brown);margin-bottom:3px}.kcard-sub{font-size:10px;color:var(--brown-light);margin-bottom:6px}.kcard-meta{display:flex;justify-content:space-between;align-items:center}.kcard-value{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:var(--brown)}.kcard-tag{font-size:9px;padding:2px 6px;border-radius:6px;background:rgba(141,110,99,.1);color:var(--brown-light)}.kcard-avatar{width:20px;height:20px;border-radius:50%;background:var(--pink);font-size:8px;display:flex;align-items:center;justify-content:center;color:var(--brown-dark);font-weight:700}.add-card-btn{display:flex;align-items:center;justify-content:center;gap:4px;background:none;border:1px dashed rgba(141,110,99,.3);border-radius:6px;padding:10px;width:100%;font-size:11px;color:var(--brown-light);cursor:pointer}.add-card-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
+    .week-header{background:var(--white);padding:12px 16px;border-bottom:1px solid rgba(141,110,99,.1);display:flex;justify-content:space-between;align-items:center;position:sticky;top:52px;z-index:50}.week-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--brown)}.week-nav{display:flex;gap:8px}.week-nav button{background:var(--cream);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}.week-nav svg{width:14px;height:14px;stroke:var(--brown);stroke-width:2;fill:none}
+    .planner-section{margin-bottom:20px}.planner-section-title{font-size:13px;font-weight:700;color:var(--brown);text-transform:uppercase;margin-bottom:10px}.activity-card{background:var(--white);border-radius:8px;padding:12px;margin-bottom:8px;border-left:3px solid var(--brown-light)}.activity-card.done{border-left-color:var(--success);opacity:.7}.activity-card.blocked{border-left-color:var(--danger)}.activity-header{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}.activity-check{width:20px;height:20px;border:2px solid var(--brown-light);border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--white)}.activity-check.checked{background:var(--success);border-color:var(--success)}.activity-check svg{width:12px;height:12px;stroke:var(--white);stroke-width:3;opacity:0}.activity-check.checked svg{opacity:1}.activity-text{flex:1;font-size:13px;color:var(--brown)}.activity-text.done{text-decoration:line-through;color:var(--brown-light)}.activity-meta{display:flex;gap:8px;flex-wrap:wrap;margin-left:30px}.activity-goal{font-size:10px;color:var(--info);background:rgba(92,122,153,.1);padding:2px 8px;border-radius:10px}.activity-day{font-size:10px;color:var(--brown-light);font-weight:600}.activity-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}.activity-status.pending{background:rgba(141,110,99,.1);color:var(--brown-light)}.activity-status.in-progress{background:rgba(92,122,153,.15);color:var(--info)}.activity-status.done{background:rgba(74,124,89,.15);color:var(--success)}.activity-status.blocked{background:rgba(139,64,73,.15);color:var(--danger)}.add-activity-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:none;border:2px dashed rgba(141,110,99,.25);border-radius:8px;padding:12px;width:100%;font-size:12px;color:var(--brown-light);cursor:pointer;margin-top:8px}.add-activity-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+    .setup-section{margin-bottom:24px}.setup-section-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--brown);margin-bottom:12px}.setup-card{background:var(--white);border-radius:10px;padding:14px;margin-bottom:10px}.setup-card-title{font-size:12px;font-weight:700;color:var(--brown);text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(141,110,99,.1)}.goal-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(141,110,99,.08)}.goal-item:last-child{border-bottom:none}.goal-text{font-size:13px;color:var(--brown)}.goal-target{font-size:12px;font-weight:600;color:var(--brown-light)}.goal-empty{font-size:12px;color:var(--brown-light);font-style:italic;padding:8px 0}.add-goal-btn{display:flex;align-items:center;gap:6px;background:none;border:none;font-size:12px;color:var(--pink);cursor:pointer;padding:8px 0;font-weight:600}.add-goal-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
+    .team-list{display:flex;flex-direction:column;gap:8px}.team-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--cream);border-radius:8px}.team-avatar{width:32px;height:32px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:12px;font-weight:600;color:var(--cream)}.team-name{font-size:13px;font-weight:500;color:var(--brown)}.team-role{font-size:10px;color:var(--brown-light)}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(62,39,35,.6);z-index:200;align-items:flex-end;justify-content:center}.modal-overlay.visible{display:flex}.modal{background:var(--white);border-radius:14px 14px 0 0;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}.modal-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(141,110,99,.1);position:sticky;top:0;background:var(--white)}.modal-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--brown)}.modal-close{background:none;border:none;padding:6px;cursor:pointer;color:var(--brown-light)}.modal-close svg{width:18px;height:18px;stroke:currentColor;stroke-width:2}.modal-body{padding:16px}.modal-footer{padding:14px 16px;border-top:1px solid rgba(141,110,99,.1);display:flex;gap:10px}
+    .form-group{margin-bottom:14px}.form-label{font-size:10px;font-weight:600;color:var(--brown-light);text-transform:uppercase;margin-bottom:6px;display:block}.form-label.required::after{content:' *';color:var(--danger)}.form-input,.form-select,.form-textarea{width:100%;border:1px solid rgba(141,110,99,.2);border-radius:8px;padding:11px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--brown);background:var(--cream)}.form-input:focus,.form-select:focus{outline:none;border-color:var(--pink)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-textarea{resize:none;min-height:70px}
+    .stage-selector{display:flex;flex-wrap:wrap;gap:6px}.stage-opt{padding:7px 12px;border-radius:14px;font-size:11px;font-weight:500;border:1px solid rgba(141,110,99,.2);background:var(--cream);color:var(--brown-light);cursor:pointer}.stage-opt.selected{background:var(--brown);color:var(--cream);border-color:var(--brown)}
+    .day-selector{display:flex;gap:6px}.day-opt{flex:1;padding:10px 4px;border-radius:8px;font-size:10px;font-weight:600;text-align:center;border:1px solid rgba(141,110,99,.2);background:var(--cream);color:var(--brown-light);cursor:pointer}.day-opt.selected{background:var(--brown);color:var(--cream)}
+    .status-selector{display:flex;gap:6px}.status-opt{flex:1;padding:10px 8px;border-radius:8px;font-size:10px;font-weight:600;text-align:center;border:1px solid rgba(141,110,99,.2);background:var(--cream);color:var(--brown-light);cursor:pointer}.status-opt.selected.pending{background:var(--brown-light);color:var(--white)}.status-opt.selected.in-progress{background:var(--info);color:var(--white)}.status-opt.selected.done{background:var(--success);color:var(--white)}.status-opt.selected.blocked{background:var(--danger);color:var(--white)}
+    .btn{padding:12px 16px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none}.btn-primary{background:var(--brown);color:var(--cream);flex:1}.btn-secondary{background:var(--cream);color:var(--brown);border:1px solid rgba(141,110,99,.2)}
+    .pipeline-view{display:none}.pipeline-view.active{display:block}
+  </style>
+</head>
+<body>
+<header class="header"><div class="header-row"><div class="logo">GROWTH FARM</div><div class="month-badge">Jan 2026</div></div></header>
+<!-- DASHBOARD -->
+<div class="screen active" id="screen-dashboard">
+  <div class="content">
+    <div class="health-score">
+      <div class="health-ring"><svg viewBox="0 0 140 140" width="140" height="140"><circle class="health-ring-bg" cx="70" cy="70" r="58"/><circle class="health-ring-fill yellow" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="109"/></svg><div class="health-center"><div class="health-percent">70%</div><div class="health-label">Company Health</div></div></div>
+      <div class="health-breakdown">
+        <div class="health-item"><div class="health-item-score green">82%</div><div class="health-item-label">BD</div></div>
+        <div class="health-item"><div class="health-item-score yellow">65%</div><div class="health-item-label">Ventures</div></div>
+        <div class="health-item"><div class="health-item-score green">75%</div><div class="health-item-label">Clients</div></div>
+        <div class="health-item"><div class="health-item-score yellow">68%</div><div class="health-item-label">Finance</div></div>
+        <div class="health-item"><div class="health-item-score red">45%</div><div class="health-item-label">Team</div></div>
+        <div class="health-item"><div class="health-item-score green">85%</div><div class="health-item-label">Admin</div></div>
       </div>
     </div>
-    <div class="month-badge">Jan 2026</div>
+    <div class="card">
+      <div class="card-title">Business Dev Pipeline <span class="card-badge">R2.1M weighted</span></div>
+      <div class="pipeline-stages">
+        <div class="pipeline-stage"><div class="stage-name">Lead</div><div class="stage-count">2</div><div class="stage-value">R100K</div></div>
+        <div class="pipeline-stage"><div class="stage-name">Discovery</div><div class="stage-count">1</div><div class="stage-value">R160K</div></div>
+        <div class="pipeline-stage"><div class="stage-name">Proposal</div><div class="stage-count">2</div><div class="stage-value">R882K</div></div>
+        <div class="pipeline-stage"><div class="stage-name">Negotiation</div><div class="stage-count">1</div><div class="stage-value">R320K</div></div>
+        <div class="pipeline-stage"><div class="stage-name">Contracting</div><div class="stage-count">0</div><div class="stage-value">R0</div></div>
+        <div class="pipeline-stage"><div class="stage-name">Won</div><div class="stage-count">1</div><div class="stage-value">R1.2M</div></div>
+      </div>
+      <div style="font-size:9px;color:var(--brown-light);text-align:right;">Lead 10% · Discovery 40% · Proposal 60% · Negotiation 80% · Contracting 90% · Won 100%</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Ventures</div>
+      <div class="ventures-row">
+        <div class="venture-chip"><div class="venture-name">Briansfomo</div><div class="venture-stage">MVP Build</div><div class="venture-days">23 days</div></div>
+        <div class="venture-chip"><div class="venture-name">Mntase</div><div class="venture-stage">Discovery</div><div class="venture-days">45 days</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Client Health</div>
+      <div class="client-health-row">
+        <div class="client-bucket"><div class="bucket-dot firm"></div><div class="bucket-count">2</div><div class="bucket-label">Firm</div></div>
+        <div class="client-bucket"><div class="bucket-dot attention"></div><div class="bucket-count">1</div><div class="bucket-label">Attention</div></div>
+        <div class="client-bucket"><div class="bucket-dot at-risk"></div><div class="bucket-count">1</div><div class="bucket-label">At Risk</div></div>
+        <div class="client-bucket"><div class="bucket-dot dormant"></div><div class="bucket-count">0</div><div class="bucket-label">Dormant</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Finance</div>
+      <div class="finance-metric"><div class="finance-header"><span class="finance-name">YTD Revenue</span><span class="finance-values">R1.8M / R2M</span></div><div class="finance-bar"><div class="finance-fill yellow" style="width:75%">R1.8M</div><div class="finance-target-line" style="left:83%"><span class="finance-target-label">Target</span></div></div></div>
+      <div class="finance-metric"><div class="finance-header"><span class="finance-name">Cash Reserves</span><span class="finance-values">R412K / R500K</span></div><div class="finance-bar"><div class="finance-fill green" style="width:82%">R412K</div><div class="finance-target-line" style="left:100%"><span class="finance-target-label">Target</span></div></div></div>
+      <div class="finance-metric"><div class="finance-header"><span class="finance-name">Tax Repayment (Jan)</span><span class="finance-values">R50K / R50K</span></div><div class="finance-bar"><div class="finance-fill green" style="width:100%">R50K ✓</div></div><div style="font-size:10px;color:var(--brown-light);margin-top:4px;">Remaining: R237K</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Admin — Attention</div>
+      <div class="admin-alert"><span class="alert-icon">⚠️</span><span class="alert-text">Contractor Agreements</span><span class="alert-status overdue">Overdue</span></div>
+      <div class="admin-alert"><span class="alert-icon">⏳</span><span class="alert-text">VAT Return</span><span class="alert-status due-soon">Due 25 Jan</span></div>
+      <div class="admin-alert"><span class="alert-icon">⏳</span><span class="alert-text">Client MSAs (2)</span><span class="alert-status due-soon">Expiring</span></div>
+    </div>
   </div>
-</header>
+</div>
+<!-- PIPELINES -->
+<div class="screen" id="screen-pipelines">
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="showPipeline('bd')">BD</button>
+    <button class="sub-tab" onclick="showPipeline('ventures')">Ventures</button>
+    <button class="sub-tab" onclick="showPipeline('studio')">Studio</button>
+    <button class="sub-tab" onclick="showPipeline('clients')">Clients</button>
+    <button class="sub-tab" onclick="showPipeline('finance')">Finance</button>
+    <button class="sub-tab" onclick="showPipeline('admin')">Admin</button>
+  </div>
+  <div class="pipeline-view active" id="pipeline-bd">
+    <div class="kanban-board">
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Lead</span><span class="column-count">2</span></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">Nedbank Digital</div><div class="kcard-sub">Design sprint</div><div class="kcard-meta"><span class="kcard-value">R320K</span><span class="kcard-avatar">ZN</span></div></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">Standard Bank</div><div class="kcard-sub">UX audit</div><div class="kcard-meta"><span class="kcard-value">R180K</span><span class="kcard-avatar">TM</span></div></div>
+        <button class="add-card-btn" onclick="openModal('bd-card')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Discovery</span><span class="column-count">1</span></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">IBM Accelerator</div><div class="kcard-sub">Programme</div><div class="kcard-meta"><span class="kcard-value">R400K</span><span class="kcard-tag">Feb 3</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Proposal</span><span class="column-count">2</span></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">IFC Agriculture</div><div class="kcard-sub">Advisory</div><div class="kcard-meta"><span class="kcard-value">R850K</span><span class="kcard-tag">12d</span></div></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">AGRA Phase 2</div><div class="kcard-sub">Trade corridors</div><div class="kcard-meta"><span class="kcard-value">R620K</span><span class="kcard-tag">5d</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Negotiation</span><span class="column-count">1</span></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">Vodacom</div><div class="kcard-sub">Digital transformation</div><div class="kcard-meta"><span class="kcard-value">R400K</span><span class="kcard-avatar">ZN</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Contracting</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Won</span><span class="column-count">1</span></div>
+        <div class="kanban-card" onclick="openModal('bd-card')"><div class="kcard-title">Gates Foundation</div><div class="kcard-sub">R&D Strategy</div><div class="kcard-meta"><span class="kcard-value">R1.2M</span><span class="kcard-tag">Jan 15</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Lost</span><span class="column-count">0</span></div></div>
+    </div>
+  </div>
+  <div class="pipeline-view" id="pipeline-ventures">
+    <div class="kanban-board">
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Idea Dump</span><span class="column-count">0</span></div><button class="add-card-btn" onclick="openModal('venture-card')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add idea</button></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Concept</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Discovery</span><span class="column-count">1</span></div>
+        <div class="kanban-card venture" onclick="openModal('venture-card')"><div class="kcard-title">Mntase Communities</div><div class="kcard-sub">Student accommodation</div><div class="kcard-meta"><span class="kcard-tag" style="color:var(--warning)">45 days</span><span class="kcard-avatar">ZN</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">MVP Build</span><span class="column-count">1</span></div>
+        <div class="kanban-card venture" onclick="openModal('venture-card')"><div class="kcard-title">Briansfomo</div><div class="kcard-sub">Curated gatherings</div><div class="kcard-meta"><span class="kcard-tag" style="color:var(--danger)">15d to launch</span><span class="kcard-avatar">ZN</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Pilot</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Live</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Scaling</span><span class="column-count">0</span></div></div>
+    </div>
+  </div>
+  <div class="pipeline-view" id="pipeline-studio">
+    <div class="kanban-board">
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Scoping</span><span class="column-count">1</span></div>
+        <div class="kanban-card studio" onclick="openModal('studio-card')"><div class="kcard-title">Digital Strategy</div><div class="kcard-sub">Nedbank</div><div class="kcard-meta"><span class="kcard-value">80 hrs</span><span class="kcard-avatar">TM</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Contracted</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">In Progress</span><span class="column-count">3</span></div>
+        <div class="kanban-card studio" onclick="openModal('studio-card')"><div class="kcard-title">R&D Strategy</div><div class="kcard-sub">Gates Foundation</div><div class="kcard-meta"><span class="kcard-value">142/160</span><span class="kcard-tag" style="color:var(--warning)">89%</span></div></div>
+        <div class="kanban-card studio" onclick="openModal('studio-card')"><div class="kcard-title">Food Corridors</div><div class="kcard-sub">AGRA</div><div class="kcard-meta"><span class="kcard-value">68/120</span><span class="kcard-tag" style="color:var(--success)">57%</span></div></div>
+        <div class="kanban-card studio" onclick="openModal('studio-card')"><div class="kcard-title">Procurement</div><div class="kcard-sub">VUT</div><div class="kcard-meta"><span class="kcard-value">52/40</span><span class="kcard-tag" style="color:var(--danger)">130%</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Review</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Complete</span><span class="column-count">0</span></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Closed</span><span class="column-count">0</span></div></div>
+    </div>
+  </div>
+  <div class="pipeline-view" id="pipeline-clients">
+    <div class="kanban-board">
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Firm</span><span class="column-count">2</span></div>
+        <div class="kanban-card client" onclick="openModal('client-card')"><div class="kcard-title">Gates Foundation</div><div class="kcard-sub">2 projects</div><div class="kcard-meta"><span class="kcard-value">R1.2M</span><span class="kcard-tag">2d</span></div></div>
+        <div class="kanban-card client" onclick="openModal('client-card')"><div class="kcard-title">AGRA</div><div class="kcard-sub">1 project</div><div class="kcard-meta"><span class="kcard-value">R620K</span><span class="kcard-tag">5d</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Attention</span><span class="column-count">1</span></div>
+        <div class="kanban-card client" onclick="openModal('client-card')"><div class="kcard-title">VUT</div><div class="kcard-sub">Over budget</div><div class="kcard-meta"><span class="kcard-value">R180K</span><span class="kcard-tag" style="color:var(--warning)">12d</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">At Risk</span><span class="column-count">1</span></div>
+        <div class="kanban-card client" onclick="openModal('client-card')"><div class="kcard-title">IBM</div><div class="kcard-sub">Pipeline only</div><div class="kcard-meta"><span class="kcard-value">R0</span><span class="kcard-tag" style="color:var(--danger)">21d</span></div></div></div>
+      <div class="kanban-column"><div class="column-header"><span class="column-title">Dormant</span><span class="column-count">0</span></div></div>
+    </div>
+  </div>
+  <div class="pipeline-view" id="pipeline-finance">
+    <div class="content">
+      <div class="card"><div class="card-title">Revenue</div><div class="form-group"><label class="form-label">YTD Actual</label><input type="text" class="form-input" value="R 1,800,000"></div><div class="form-group"><label class="form-label">YTD Target</label><input type="text" class="form-input" value="R 2,000,000" readonly style="background:#eee"></div></div>
+      <div class="card"><div class="card-title">Cash</div><div class="form-group"><label class="form-label">Current Reserves</label><input type="text" class="form-input" value="R 412,000"></div></div>
+      <div class="card"><div class="card-title">Tax Debt</div><div class="form-group"><label class="form-label">Outstanding</label><input type="text" class="form-input" value="R 237,000"></div><div class="form-row"><div class="form-group"><label class="form-label">Monthly Target</label><input type="text" class="form-input" value="R 50,000" readonly style="background:#eee"></div><div class="form-group"><label class="form-label">Jan Paid</label><input type="text" class="form-input" value="R 50,000"></div></div></div>
+      <button class="btn btn-primary" style="width:100%">Save</button>
+    </div>
+  </div>
+  <div class="pipeline-view" id="pipeline-admin">
+    <div class="content">
+      <div class="card"><div class="card-title">Compliance</div>
+        <div class="goal-item"><span class="goal-text">VAT Return</span><span class="alert-status due-soon">Due 25 Jan</span></div>
+        <div class="goal-item"><span class="goal-text">PAYE</span><span class="alert-status" style="background:rgba(74,124,89,.15);color:var(--success)">✓ Done</span></div>
+        <div class="goal-item"><span class="goal-text">Provisional Tax</span><span class="alert-status" style="background:rgba(74,124,89,.15);color:var(--success)">✓ Done</span></div>
+        <div class="goal-item"><span class="goal-text">Bank Recon</span><span class="alert-status" style="background:rgba(74,124,89,.15);color:var(--success)">✓ Done</span></div>
+        <div class="goal-item"><span class="goal-text">Contractor Agreements</span><span class="alert-status overdue">Overdue</span></div>
+        <div class="goal-item"><span class="goal-text">Client MSAs</span><span class="alert-status due-soon">2 Expiring</span></div>
+        <div class="goal-item"><span class="goal-text">Odoo</span><span class="alert-status" style="background:rgba(92,122,153,.15);color:var(--info)">In Progress</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- WEEKLY -->
+<div class="screen" id="screen-weekly">
+  <div class="week-header"><div class="week-title">Week 5 · Jan 27 - Feb 2</div><div class="week-nav"><button><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+  <div class="content">
+    <div class="planner-section"><div class="planner-section-title">Business Dev</div>
+      <div class="activity-card done"><div class="activity-header"><div class="activity-check checked" onclick="toggleActivity(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="activity-text done">Follow up IFC proposal</span></div><div class="activity-meta"><span class="activity-goal">Close 3 retainers</span><span class="activity-day">Mon</span><span class="activity-status done">Done</span></div></div>
+      <div class="activity-card"><div class="activity-header"><div class="activity-check" onclick="toggleActivity(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="activity-text">Prepare IBM discovery deck</span></div><div class="activity-meta"><span class="activity-goal">Pipeline R5M</span><span class="activity-day">Wed</span><span class="activity-status pending">Pending</span></div></div>
+      <button class="add-activity-btn" onclick="openModal('activity')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add activity</button></div>
+    <div class="planner-section"><div class="planner-section-title">Ventures</div>
+      <div class="activity-card"><div class="activity-header"><div class="activity-check" onclick="toggleActivity(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="activity-text">Review Briansfomo payment integration</span></div><div class="activity-meta"><span class="activity-goal">Launch Feb 14</span><span class="activity-day">Tue</span><span class="activity-status in-progress">In Progress</span></div></div>
+      <button class="add-activity-btn" onclick="openModal('activity')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add activity</button></div>
+    <div class="planner-section"><div class="planner-section-title">Studio</div>
+      <div class="activity-card"><div class="activity-header"><div class="activity-check" onclick="toggleActivity(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="activity-text">Complete Gates R&D draft</span></div><div class="activity-meta"><span class="activity-goal">80% on budget</span><span class="activity-day">Thu</span><span class="activity-status pending">Pending</span></div></div>
+      <div class="activity-card blocked"><div class="activity-header"><div class="activity-check" onclick="toggleActivity(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="activity-text">Delegate VUT to contractor</span></div><div class="activity-meta"><span class="activity-goal">CEO &lt;30%</span><span class="activity-day">Mon</span><span class="activity-status blocked">Blocked</span></div></div>
+      <button class="add-activity-btn" onclick="openModal('activity')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add activity</button></div>
+    <div class="planner-section"><div class="planner-section-title">Admin</div>
+      <div class="activity-card"><div class="activity-header"><div class="activity-check" onclick="toggleActivity(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><span class="activity-text">Review contractor agreements</span></div><div class="activity-meta"><span class="activity-goal">100% compliance</span><span class="activity-day">Tue</span><span class="activity-status pending">Pending</span></div></div>
+      <button class="add-activity-btn" onclick="openModal('activity')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add activity</button></div>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div class="screen" id="screen-setup">
+  <div class="content">
+    <div class="setup-section"><div class="setup-section-title">Team</div>
+      <div class="team-list">
+        <div class="team-item"><div class="team-avatar">ZN</div><div class="team-info"><div class="team-name">Zweli Ntshona</div><div class="team-role">CEO</div></div></div>
+        <div class="team-item"><div class="team-avatar">TM</div><div class="team-info"><div class="team-name">Thabo Molefe</div><div class="team-role">Chief of Staff</div></div></div>
+        <div class="team-item"><div class="team-avatar">CA</div><div class="team-info"><div class="team-name">[CoS Associate]</div><div class="team-role">CoS Associate</div></div></div>
+        <div class="team-item"><div class="team-avatar">LK</div><div class="team-info"><div class="team-name">Lindiwe Khumalo</div><div class="team-role">CFO</div></div></div>
+        <div class="team-item"><div class="team-avatar">NP</div><div class="team-info"><div class="team-name">Naledi Phiri</div><div class="team-role">Executive Assistant</div></div></div>
+      </div></div>
+    <div class="setup-section"><div class="setup-section-title">Annual Goals 2026</div>
+      <div class="setup-card"><div class="setup-card-title">Business Dev</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Ventures</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Studio</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Clients</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Finance</div><div class="goal-item"><span class="goal-text">Annual Revenue</span><span class="goal-target">R24,000,000</span></div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Admin</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div></div>
+    <div class="setup-section"><div class="setup-section-title">Monthly Goals — January</div>
+      <div class="setup-card"><div class="setup-card-title">Business Dev</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Ventures</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Studio</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Clients</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Finance</div><div class="goal-item"><span class="goal-text">Monthly Revenue</span><span class="goal-target">R2,000,000</span></div><div class="goal-item"><span class="goal-text">Tax Provision</span><span class="goal-target">R50,000</span></div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div>
+      <div class="setup-card"><div class="setup-card-title">Admin</div><div class="goal-empty">No goals set</div><button class="add-goal-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add goal</button></div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showScreen('dashboard')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard</button>
+  <button class="nav-item" onclick="showScreen('pipelines')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Pipelines</button>
+  <button class="nav-item" onclick="showScreen('weekly')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Weekly</button>
+  <button class="nav-item" onclick="showScreen('setup')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Setup</button>
+</nav>
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-activity">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Add Activity</span><button class="modal-close" onclick="closeModal('activity')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label required">Activity</label><textarea class="form-textarea" placeholder="What will you deliver?"></textarea></div>
+      <div class="form-group"><label class="form-label required">Focus Area</label><select class="form-select"><option>Business Dev</option><option>Ventures</option><option>Studio</option><option>Clients</option><option>Finance</option><option>Admin</option></select></div>
+      <div class="form-group"><label class="form-label required">Monthly Goal</label><select class="form-select"><option value="">-- Select goal --</option></select></div>
+      <div class="form-group"><label class="form-label required">Due Day</label><div class="day-selector"><div class="day-opt" onclick="selectDay(this)">Mon</div><div class="day-opt" onclick="selectDay(this)">Tue</div><div class="day-opt" onclick="selectDay(this)">Wed</div><div class="day-opt" onclick="selectDay(this)">Thu</div><div class="day-opt" onclick="selectDay(this)">Fri</div><div class="day-opt" onclick="selectDay(this)">Sat</div><div class="day-opt" onclick="selectDay(this)">Sun</div></div></div>
+      <div class="form-group"><label class="form-label">Owner</label><select class="form-select"><option>Zweli Ntshona</option><option>Thabo Molefe</option><option>CoS Associate</option><option>Lindiwe Khumalo</option><option>Naledi Phiri</option></select></div>
+      <div class="form-group"><label class="form-label">Status</label><div class="status-selector"><div class="status-opt selected pending" onclick="selectStatus(this,'pending')">Pending</div><div class="status-opt in-progress" onclick="selectStatus(this,'in-progress')">In Progress</div><div class="status-opt done" onclick="selectStatus(this,'done')">Done</div><div class="status-opt blocked" onclick="selectStatus(this,'blocked')">Blocked</div></div></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" placeholder="Outcome notes..."></textarea></div>
+      <div class="form-group"><label class="form-label">Drive Link</label><input type="url" class="form-input" placeholder="Paste link"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('activity')">Cancel</button><button class="btn btn-primary" onclick="closeModal('activity')">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-bd-card">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">BD Opportunity</span><button class="modal-close" onclick="closeModal('bd-card')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Client</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Opportunity</label><input type="text" class="form-input"></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Value (R)</label><input type="text" class="form-input"></div><div class="form-group"><label class="form-label">Expected Close</label><input type="date" class="form-input"></div></div>
+      <div class="form-group"><label class="form-label">Stage</label><div class="stage-selector"><span class="stage-opt" onclick="selectStage(this)">Lead</span><span class="stage-opt" onclick="selectStage(this)">Discovery</span><span class="stage-opt selected" onclick="selectStage(this)">Proposal</span><span class="stage-opt" onclick="selectStage(this)">Negotiation</span><span class="stage-opt" onclick="selectStage(this)">Contracting</span><span class="stage-opt" onclick="selectStage(this)">Won</span><span class="stage-opt" onclick="selectStage(this)">Lost</span></div></div>
+      <div class="form-group"><label class="form-label">Owner</label><select class="form-select"><option>Zweli Ntshona</option><option>Thabo Molefe</option></select></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea"></textarea></div>
+      <div class="form-group"><label class="form-label">Drive Link</label><input type="url" class="form-input"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('bd-card')">Cancel</button><button class="btn btn-primary" onclick="closeModal('bd-card')">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-venture-card">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Venture</span><button class="modal-close" onclick="closeModal('venture-card')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Stage</label><div class="stage-selector"><span class="stage-opt" onclick="selectStage(this)">Idea Dump</span><span class="stage-opt" onclick="selectStage(this)">Concept</span><span class="stage-opt" onclick="selectStage(this)">Discovery</span><span class="stage-opt selected" onclick="selectStage(this)">MVP Build</span><span class="stage-opt" onclick="selectStage(this)">Pilot</span><span class="stage-opt" onclick="selectStage(this)">Live</span><span class="stage-opt" onclick="selectStage(this)">Scaling</span></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Days in Stage</label><input type="number" class="form-input"></div><div class="form-group"><label class="form-label">Target Date</label><input type="date" class="form-input"></div></div>
+      <div class="form-group"><label class="form-label">Next Milestone</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Blockers</label><textarea class="form-textarea"></textarea></div>
+      <div class="form-group"><label class="form-label">Links</label><textarea class="form-textarea"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('venture-card')">Cancel</button><button class="btn btn-primary" onclick="closeModal('venture-card')">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-studio-card">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Studio Project</span><button class="modal-close" onclick="closeModal('studio-card')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Project</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Client</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Stage</label><div class="stage-selector"><span class="stage-opt" onclick="selectStage(this)">Scoping</span><span class="stage-opt" onclick="selectStage(this)">Contracted</span><span class="stage-opt selected" onclick="selectStage(this)">In Progress</span><span class="stage-opt" onclick="selectStage(this)">Review</span><span class="stage-opt" onclick="selectStage(this)">Complete</span><span class="stage-opt" onclick="selectStage(this)">Closed</span></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Hours Budget</label><input type="number" class="form-input"></div><div class="form-group"><label class="form-label">Hours Used</label><input type="number" class="form-input"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Rate (R/hr)</label><input type="number" class="form-input"></div><div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input"></div></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea"></textarea></div>
+      <div class="form-group"><label class="form-label">Drive Link</label><input type="url" class="form-input"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('studio-card')">Cancel</button><button class="btn btn-primary" onclick="closeModal('studio-card')">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-client-card">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Client</span><button class="modal-close" onclick="closeModal('client-card')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Client Name</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Contact</label><input type="text" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Health</label><div class="stage-selector"><span class="stage-opt selected" onclick="selectStage(this)">Firm</span><span class="stage-opt" onclick="selectStage(this)">Attention</span><span class="stage-opt" onclick="selectStage(this)">At Risk</span><span class="stage-opt" onclick="selectStage(this)">Dormant</span></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Active Projects</label><input type="number" class="form-input"></div><div class="form-group"><label class="form-label">YTD Revenue</label><input type="text" class="form-input"></div></div>
+      <div class="form-group"><label class="form-label">Last Contact</label><input type="date" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('client-card')">Cancel</button><button class="btn btn-primary" onclick="closeModal('client-card')">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-goal">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Add Goal</span><button class="modal-close" onclick="closeModal('goal')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label required">Goal</label><input type="text" class="form-input" placeholder="e.g. Close 3 retainer clients"></div>
+      <div class="form-group"><label class="form-label">Target</label><input type="text" class="form-input" placeholder="e.g. R500,000 or 40%"></div>
+      <div class="form-group"><label class="form-label">Focus Area</label><select class="form-select"><option>Business Dev</option><option>Ventures</option><option>Studio</option><option>Clients</option><option>Finance</option><option>Admin</option></select></div>
+      <div class="form-group"><label class="form-label">Type</label><select class="form-select"><option>Annual</option><option>Monthly</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('goal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('goal')">Save</button></div>
+  </div>
+</div>
+
+<script>
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');event.currentTarget.classList.add('active');window.scrollTo(0,0)}
+function showPipeline(id){document.querySelectorAll('.pipeline-view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));document.getElementById('pipeline-'+id).classList.add('active');event.currentTarget.classList.add('active')}
+function openModal(id){document.getElementById('modal-'+id).classList.add('visible');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('visible');document.body.style.overflow=''}
+document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('visible');document.body.style.overflow=''}})})
+function selectStage(el){el.parentElement.querySelectorAll('.stage-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function selectDay(el){el.parentElement.querySelectorAll('.day-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function selectStatus(el,s){el.parentElement.querySelectorAll('.status-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
+function toggleActivity(el){el.classList.toggle('checked');const c=el.closest('.activity-card'),t=c.querySelector('.activity-text'),s=c.querySelector('.activity-status');if(el.classList.contains('checked')){c.classList.add('done');t.classList.add('done');s.className='activity-status done';s.textContent='Done'}else{c.classList.remove('done');t.classList.remove('done');s.className='activity-status pending';s.textContent='Pending'}}
+document.querySelectorAll('.add-goal-btn').forEach(b=>b.addEventListener('click',()=>openModal('goal')))
+</script>
+</body>
+</html>
