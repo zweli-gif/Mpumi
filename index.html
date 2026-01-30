@@ -1,132 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mpumi — Growth Farm Master</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{--brown-dark:#3E2723;--brown:#5D4037;--brown-light:#8D6E63;--pink:#D4A5A5;--cream:#FAF8F5;--white:#FFF;--success:#4A7C59;--warning:#C9A227;--danger:#8B4049;--info:#5C7A99}
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;padding-bottom:70px}
-    .header{background:var(--brown);padding:14px 16px;position:sticky;top:0;z-index:100;border-bottom:3px solid var(--pink)}
-    .header-row{display:flex;justify-content:space-between;align-items:center}.logo{font-family:'Playfair Display',serif;font-weight:600;color:var(--cream);font-size:16px}
-    .screen{display:none}.screen.active{display:block}.content{padding:16px}
-    /* Restored v5 Card Styling */
-    .card{background:var(--white);border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(62,39,35,.06)}
-    .card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--brown);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-    /* Restored v5 Health Score */
-    .health-score{text-align:center;padding:20px;background:var(--white);border-radius:12px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
-    .health-ring{position:relative;width:140px;height:140px;margin:0 auto 16px}.health-ring svg{transform:rotate(-90deg)}
-    .health-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .health-percent{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--brown)}
-    .health-grid{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.health-item{text-align:center;min-width:50px;font-size:10px;font-weight:700}
-    /* Pipelines & Bars */
-    .pipeline-stages{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.pipeline-stage{flex:0 0 auto;min-width:80px;background:var(--cream);border-radius:8px;padding:10px 8px;text-align:center}
-    .fin-bar{height:20px;background:rgba(141,110,99,.12);border-radius:6px;position:relative;margin:8px 0;overflow:hidden}.fin-fill{height:100%;background:var(--success);width:75%}
-    /* Nav */
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);display:flex;border-top:1px solid rgba(141,110,99,.15);z-index:100}
-    .nav-item{flex:1;padding:10px 4px 8px;text-align:center;font-size:9px;font-weight:600;color:var(--brown-light);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-    .nav-item.active{color:var(--brown);border-top:3px solid var(--pink)}
-    .nav-item svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.5;fill:none}
-    /* Analysis & Forms */
-    .dep-box{background:rgba(201,162,39,0.1); border-left:4px solid var(--warning); padding:10px; margin-top:10px; font-size:11px; border-radius:4px}
-    input, select, textarea{width:100%; padding:12px; margin:8px 0; border:1px solid #eee; border-radius:8px; background:var(--cream)}
-    .btn-save{background:var(--brown); color:var(--cream); padding:14px; border:none; border-radius:8px; width:100%; font-weight:700; cursor:pointer}
-  </style>
-</head>
-<body>
+<style>
+  /* LOGO VIBE: McKinsey Rigor meets Human Spirit */
+  .logo-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 0.8; /* Pulls the words closer vertically */
+    padding: 5px 0;
+  }
 
-<header class="header"><div class="header-row"><div class="logo">GROWTH FARM • MPUMI</div><div style="background:var(--pink); padding:4px 10px; border-radius:12px; font-size:10px; font-weight:700">Jan 2026</div></div></header>
+  .logo-growth {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 28px; /* Compact size for mobile */
+    letter-spacing: -1px;
+    color: var(--cream);
+    text-transform: none;
+  }
 
-<div class="screen active" id="scr-dash">
-  <div class="content">
-    <div class="health-score">
-      <div class="health-ring"><svg viewBox="0 0 140 140" width="140" height="140"><circle cx="70" cy="70" r="58" fill="none" stroke="rgba(141,110,99,.15)" stroke-width="12"/><circle cx="70" cy="70" r="58" fill="none" stroke="var(--warning)" stroke-width="12" stroke-dasharray="364.4" stroke-dashoffset="109"/></svg><div class="health-center"><div class="health-percent">70%</div><div style="font-size:10px">Company Health</div></div></div>
-      <div class="health-grid">
-        <div class="health-item"><div style="color:var(--success)">82%</div>BD</div><div class="health-item"><div style="color:var(--warning)">65%</div>VENT</div><div class="health-item"><div style="color:var(--success)">75%</div>CLNT</div>
+  .logo-farm {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    /* This specific spacing aligns 'FARM' exactly under 'Growth' */
+    letter-spacing: 5.8px; 
+    color: var(--cream);
+    position: relative;
+    text-transform: uppercase;
+  }
+
+  .balloon {
+    position: absolute;
+    left: 4px; /* Tied to the 'F' */
+    top: -8px; /* Contained: does not pass the top of 'Growth' */
+    width: 12px;
+    height: 16px;
+    background: var(--pink);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    transform: rotate(-8deg);
+  }
+
+  .balloon-string {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    width: 1px;
+    height: 10px;
+    background: var(--cream);
+  }
+</style>
+
+<header class="header">
+  <div class="header-row">
+    <div class="logo-stack">
+      <div class="logo-growth">Growth</div>
+      <div class="logo-farm">
+        Farm
+        <div class="balloon"><div class="balloon-string"></div></div>
       </div>
     </div>
-
-    <div class="card">
-      <div class="card-title">Business Dev Pipeline <span style="font-size:10px; background:var(--brown); color:white; padding:2px 8px; border-radius:10px">R2.1M weighted</span></div>
-      <div class="pipeline-stages">
-        <div class="pipeline-stage"><div style="font-size:8px; color:var(--brown-light)">LEAD</div><div style="font-weight:700">2</div><div style="font-size:9px">R100K</div></div>
-        <div class="pipeline-stage"><div style="font-size:8px; color:var(--brown-light)">DISCO</div><div style="font-weight:700">1</div><div style="font-size:9px">R160K</div></div>
-        <div class="pipeline-stage"><div style="font-size:8px; color:var(--brown-light)">PROP</div><div style="font-weight:700">2</div><div style="font-size:9px">R882K</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Finance: R24M Cascade</div>
-      <div style="font-size:11px; display:flex; justify-content:space-between"><span>Monthly Revenue</span><span>R1.8M / R2M</span></div>
-      <div class="fin-bar"><div class="fin-fill" style="width:90%"></div></div>
-    </div>
+    <div class="month-badge">Jan 2026</div>
   </div>
-</div>
-
-<div class="screen" id="scr-delivery">
-  <div class="content">
-    <div class="card">
-      <div class="card-title">Ongoing Project Delivery</div>
-      <div id="project-container">
-        <strong style="color:var(--pink); font-size:12px">Gates Foundation: R&D Strategy</strong>
-        <p style="font-size:11px; margin-top:5px">Resource: Lindiwe | Margin: <span style="color:var(--success); font-weight:700">18%</span></p>
-        <div class="dep-box"><strong>Accountability:</strong> Naledi must clear G-Drive folder.</div>
-      </div>
-    </div>
-    
-    <div class="card">
-      <div class="card-title">Add New Delivery Entry</div>
-      <input type="text" id="cName" placeholder="Client Name">
-      <input type="text" id="rName" placeholder="Resource Name">
-      <div style="display:flex; gap:8px"><input type="number" id="cRate" placeholder="Client Rate"><input type="number" id="pRate" placeholder="Our Cost"></div>
-      <textarea id="dNote" placeholder="Dependency Note (Accountability description)"></textarea>
-      <button class="btn-save" onclick="addProject()">Commit to Pipeline</button>
-    </div>
-  </div>
-</div>
-
-<div class="screen" id="scr-analysis">
-  <div class="content">
-    <div class="card">
-      <div class="card-title">Strategic Insights</div>
-      <div style="border-left:4px solid var(--danger); padding-left:12px; margin-bottom:15px">
-        <strong>Trend: Billable Leakage</strong>
-        <p style="font-size:11px; color:var(--brown-light)">Actual hours are 12% over planned.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="nav('dash')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Dashboard</button>
-  <button class="nav-item" onclick="nav('delivery')"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Delivery</button>
-  <button class="nav-item" onclick="nav('analysis')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Analysis</button>
-</nav>
-
-<script>
-function nav(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('scr-'+id).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-function addProject(){
-  const client = document.getElementById('cName').value;
-  const res = document.getElementById('rName').value;
-  const note = document.getElementById('dNote').value;
-  if(!client || !res) return alert("Please fill in Client and Resource");
-  
-  const html = `<div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px">
-    <strong style="color:var(--pink); font-size:12px">${client}</strong>
-    <p style="font-size:11px">Resource: ${res}</p>
-    <div class="dep-box"><strong>Dependency:</strong> ${note}</div>
-  </div>`;
-  document.getElementById('project-container').innerHTML += html;
-  alert("Committed to Mpumi!");
-  nav('delivery');
-}
-</script>
-</body>
-</html>
+</header>
