@@ -1,0 +1,126 @@
+/* Brand Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* Growth Farm Color System */
+@theme {
+  /* Primary Brand */
+  --color-soil: #4A3425;
+  --color-soil-light: #5D4037;
+  --color-soil-muted: #8D7B6B;
+
+  /* Accent */
+  --color-balloon: #D4858D;
+  --color-balloon-light: #E5A5AD;
+
+  /* Background */
+  --color-canvas: #F5F1EB;
+  --color-canvas-dark: #E8E4DE;
+
+  /* Status */
+  --color-success: #4A7C59;
+  --color-warning: #C9A227;
+  --color-error: #8B4049;
+  --color-info: #5C7A99;
+
+  /* Text */
+  --color-text-primary: #3D2817;
+  --color-text-secondary: #6B5444;
+  --color-text-muted: #8D7B6B;
+
+  /* Typography */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-canvas);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading Font */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom animations */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out;
+}
+
+/* Button press effect */
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 52, 37, 0.1);
+}
+
+/* Focus ring for accessibility */
+.focus-ring:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--color-balloon);
+  ring-offset: 2px;
+}
+
+/* Progress ring for health score */
+.health-ring {
+  transform: rotate(-90deg);
+}
